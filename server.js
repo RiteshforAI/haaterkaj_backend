@@ -18,10 +18,15 @@ const app = express();
 // ✅ Enable CORS (Allow frontend requests)
 app.use(
   cors({
-    origin: "http://localhost:3000", // React frontend
-    credentials: true, // allows cookies or auth headers
+    origin: [
+      "http://localhost:3000",
+      "https://haaterkaj.com",
+      "https://www.haaterkaj.com",
+    ],
+    credentials: true,
   })
 );
+
 
 // ✅ Middleware to parse JSON
 app.use(express.json());
@@ -56,4 +61,5 @@ app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   
 });
+
 
