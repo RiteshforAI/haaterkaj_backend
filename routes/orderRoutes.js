@@ -1,6 +1,5 @@
 // routes/orderRoutes.js
 import express from "express";
-import Razorpay from "razorpay";
 import dotenv from "dotenv";
 import crypto from "crypto";
 import Order from "../models/Order.js";
@@ -95,3 +94,4 @@ router.post("/verify", async (req, res) => {
 });
 
 export default router;
+
