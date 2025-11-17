@@ -30,7 +30,6 @@ app.use(express.json());
 import authRoutes from "./routes/authRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
-import orderRoutes from "./routes/orderRoutes.js";
 import sellerRoutes from "./routes/sellerRoutes.js";
 
 
@@ -38,7 +37,6 @@ import sellerRoutes from "./routes/sellerRoutes.js";
 // ✅ Use routes
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
-app.use("/api/orders", orderRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/uploads", express.static("uploads"));
 app.use("/api/seller", sellerRoutes);
@@ -56,9 +54,6 @@ app.get("/", (req, res) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
-  console.log(
-    `🔑 Razorpay Key ID: ${
-      process.env.RAZORPAY_KEY_ID ? "Loaded ✅" : "❌ Missing!"
-    }`
-  );
+  
 });
+
