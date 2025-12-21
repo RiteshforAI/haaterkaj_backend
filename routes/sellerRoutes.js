@@ -145,26 +145,41 @@ router.put(
       }
 
       // ✅ CLOUDINARY IMAGE URL (PERMANENT)
-      if (req.file) {
-        updateData.image = req.file.path; // 🔥 THIS LINE FIXES EVERYTHING
-      }
+     if (req.file) {
+    updateData.image = req.file.path;
+  }
 
-      const updatedProduct = await Product.findByIdAndUpdate(
-        req.params.id,
-        updateData,
-        { new: true }
-      );
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid product ID",
+    });
+  }
 
-      res.json({
-        success: true,
-        message: "Product updated successfully",
-        product: updatedProduct,
-      });
-    } catch (err) {
-      res.status(500).json({
-        success: false,
-        message: err.message,
-      });
+  const updatedProduct = await Product.findByIdAndUpdate(
+    req.params.id,
+    updateData,
+    { new: true, runValidators: true }
+  );
+
+  if (!updatedProduct) {
+    return res.status(404).json({
+      success: false,
+      message: "Product not found",
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Product updated successfully",
+    product: updatedProduct,
+  });
+} catch (err) {
+  console.error("UPDATE ERROR:", err);
+  res.status(500).json({
+    success: false,
+    message: err.message,
+  });
     }
   }
 );
