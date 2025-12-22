@@ -9,7 +9,7 @@ import User from "../models/User.js"; // adjust model name if different
 const router = express.Router();
 
 // SIGNUP
-router.post("/login", async (req, res) => {
+router.post("/signup", async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
