@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import express from "express";
 import Seller from "../models/Seller.js";
 import Product from "../models/Product.js";
