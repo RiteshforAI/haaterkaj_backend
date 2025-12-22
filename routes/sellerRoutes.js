@@ -1,5 +1,4 @@
 import express from "express";
-import mongoose from "mongoose";
 import Seller from "../models/Seller.js";
 import Product from "../models/Product.js";
 import bcrypt from "bcryptjs";
