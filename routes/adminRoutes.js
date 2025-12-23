@@ -1,7 +1,7 @@
 import express from "express";
 import Admin from "../models/Admin.js";
 import Product from "../models/Product.js";
-import Seller from "../models/Seller.js";
+import Seller from "../models/Seller.js"; 
 import upload from "../middleware/upload.js";
 import adminAuth from "../middleware/adminAuth.js";
 import bcrypt from "bcryptjs";
@@ -11,13 +11,15 @@ const router = express.Router();
 
 /* ================= ADMIN AUTH ================= */
 
-// SIGNUP
+// ADMIN SIGNUP
 router.post("/signup", async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
     const exist = await Admin.findOne({ email });
-    if (exist) return res.status(400).json({ message: "Admin already exists" });
+    if (exist) {
+      return res.status(400).json({ message: "Admin already exists" });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
     await Admin.create({ name, email, password: hashedPassword });
@@ -28,19 +30,29 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-// LOGIN
+// ADMIN LOGIN
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  const admin = await Admin.findOne({ email });
-  if (!admin) return res.json({ success: false, message: "No admin found" });
+    const admin = await Admin.findOne({ email });
+    if (!admin) {
+      return res.json({ success: false, message: "No admin found" });
+    }
 
-  const match = await bcrypt.compare(password, admin.password);
-  if (!match) return res.json({ success: false, message: "Wrong password" });
+    const match = await bcrypt.compare(password, admin.password);
+    if (!match) {
+      return res.json({ success: false, message: "Wrong password" });
+    }
 
-  const token = jwt.sign({ id: admin._id }, "SECRET", { expiresIn: "7d" });
+    const token = jwt.sign({ id: admin._id }, "SECRET", {
+      expiresIn: "7d",
+    });
 
-  res.json({ success: true, token, admin });
+    res.json({ success: true, token, admin });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
 });
 
 /* ================= PRODUCTS ================= */
@@ -95,22 +107,22 @@ router.delete("/product/:id", adminAuth, async (req, res) => {
   }
 });
 
-/* ================= USERS ================= */
+/* ================= USERS (SELLERS) ================= */
 
-// GET ALL USERS
+// GET ALL USERS (SELLERS)
 router.get("/users", adminAuth, async (req, res) => {
   try {
-    const users = await User.find().select("-password");
+    const users = await Seller.find().select("-password");
     res.json({ success: true, users });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 });
 
-// DELETE USER
+// DELETE USER (SELLER)
 router.delete("/user/:id", adminAuth, async (req, res) => {
   try {
-    await User.findByIdAndDelete(req.params.id);
+    await Seller.findByIdAndDelete(req.params.id);
     res.json({ success: true, message: "User deleted successfully" });
   } catch (err) {
     res.status(400).json({ success: false, message: err.message });
