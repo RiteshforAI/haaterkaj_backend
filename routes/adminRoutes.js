@@ -45,7 +45,8 @@ router.post("/login", async (req, res) => {
 router.post("/add-product", upload.single("image"), async (req, res) => {
   try {
     const { name, description, place, features } = req.body;
-    const image = req.file ? `/uploads/${req.file.filename}` : "";
+    const image = req.file ? req.file.path : "";
+
 
     const featuresArray = typeof features === "string"
       ? features.split(",").map(f => f.trim())
